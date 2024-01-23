@@ -35,8 +35,31 @@
     }
 
     .open {
-      width: 250px;
+      width: 320px;
     }
+	
+	.namecol {
+	  width: 180px;
+	  border: 1px solid black;
+	  border-collapse: collapse;
+	}
+	
+	.phonecol {
+	  width: 70px;
+	  border: 1px solid black;
+	  border-collapse: collapse;
+	}
+	
+	.distcol {
+	  width: 70px;
+	  border: 1px solid black;
+	  border-collapse: collapse;
+	}
+	
+	.gridall {
+	  border: 1px solid black;
+	  border-collapse: collapse;
+	}
 
     /* Styling for place details */
     .hero {
@@ -84,20 +107,42 @@
     let service;
     let infoPane;
 	let type_list;
+	let center;
+	var poslat = -6.1978062;
+	var poslng = 106.7448093;
+	var markerdata;
+	var rad;
+	//var cell = document.createElement('td');
+	//var row = document.createElement('tr');
+	var table = document.createElement('table');
+	var tableBody = document.createElement('tbody');
     function initMap() {
       // Initialize variables
-      bounds = new google.maps.LatLngBounds();
+      rad=2000;
+	  markerdata=[];
+	  markerdata[0]=[''];
+	  bounds = new google.maps.LatLngBounds();
       infoWindow = new google.maps.InfoWindow;
       currentInfoWindow = infoWindow;
       /* TODO: Step 4A3: Add a generic sidebar */
       infoPane = document.getElementById('panel');
-      handleLocationError(false, infoWindow);
+	  infoPane.classList.remove("open");
+	  
+	  table.appendChild(tableBody);
+	  table.classList.remove("gridall");
+	  infoPane.appendChild(table);
+	  
+      showPanel(['Name','Phone','Dist m']);
+	  handleLocationError(false, infoWindow);
+	  //console.log(markerdata.length);
+	  //console.log(markerdata);
+	  //showPanel(markerdata);
     }
 
     // Handle a geolocation error
     function handleLocationError(browserHasGeolocation, infoWindow) {
       // Set default location to Sydney, Australia
-      pos = { lat: -6.1978062, lng: 106.7448093 };
+      pos = { lat: poslat, lng: poslng };
       map = new google.maps.Map(document.getElementById('map'), {
         center: pos,
         zoom: 15
@@ -110,26 +155,28 @@
 		  fillOpacity: 0.35,
 		  map,
 		  center: pos,
-		  radius: 2000,
+		  radius: rad,
 		  clickable: false
 	  });
-	  new google.maps.Marker({
+	  center = new google.maps.Marker({
 	  position: pos,
 	  map,
 	  title: "Center Point",
 	  });
 	  // Call Places Nearby Search on the default location
-          service = new google.maps.places.PlacesService(map);
-	  type_list = ['accounting', 'airport', 'amusement_park', 'aquarium', 'art_gallery', 'atm', 'bakery', 'bank', 'bar', 'beauty_salon', 'bicycle_store', 'book_store', 'bowling_alley', 'bus_station', 'cafe', 'campground', 'car_dealer', 'car_rental', 'car_repair', 'car_wash', 'casino', 'cemetery', 'church', 'city_hall', 'clothing_store', 'convenience_store', 'courthouse', 'dentist', 'department_store', 'doctor', 'drugstore', 'electrician', 'electronics_store', 'embassy', 'fire_station', 'florist', 'funeral_home', 'furniture_store', 'gas_station', 'gym', 'hair_care', 'hardware_store', 'hindu_temple', 'home_goods_store', 'hospital', 'insurance_agency', 'jewelry_store', 'laundry', 'lawyer', 'library', 'light_rail_station', 'liquor_store', 'local_government_office', 'locksmith', 'lodging', 'meal_delivery', 'meal_takeaway', 'mosque', 'movie_rental', 'movie_theater', 'moving_company', 'museum', 'night_club', 'painter', 'park', 'parking', 'pet_store', 'pharmacy', 'physiotherapist', 'plumber', 'police', 'post_office', 'primary_school', 'real_estate_agency', 'restaurant', 'roofing_contractor', 'rv_park', 'school', 'secondary_school', 'shoe_store', 'shopping_mall', 'spa', 'stadium', 'storage', 'store', 'subway_station', 'supermarket', 'synagogue', 'taxi_stand', 'tourist_attraction', 'train_station', 'transit_station', 'travel_agency', 'university', 'veterinary_care', 'zoo', 'archipelago', 'colloquial_area', 'continent', 'country', 'establishment', 'finance', 'food', 'general_contractor', 'health', 'place_of_worship'];
-	  //type_list.forEach((type) => getNearbyPlaces(pos, service, type));
+      service = new google.maps.places.PlacesService(map);
+	  type_list = ['accounting', 'airport', 'amusement_park', 'aquarium', 'art_gallery', 'atm', 'bakery', 'bank', 'bar', 'beauty_salon', 'bicycle_store', 'book_store', 'bowling_alley', 'bus_station', 'cafe', 'campground', 'car_dealer', 'car_rental', 'car_repair', 'car_wash', 'casino', 'cemetery', 'church', 'city_hall', 'clothing_store', 'convenience_store', 'courthouse', 'dentist', 'department_store', 'doctor', 'drugstore', 'electrician', 'electronics_store', 'embassy', 'fire_station', 'florist', 'funeral_home', 'furniture_store', 'gas_station', 'gym', 'hair_care', 'hardware_store', 'hindu_temple', 'home_goods_store', 'hospital', 'insurance_agency', 'jewelry_store', 'laundry', 'lawyer', 'library', 'light_rail_station', 'liquor_store', 'local_government_office', 'locksmith', 'lodging', 'meal_delivery', 'meal_takeaway', 'mosque', 'movie_rental', 'movie_theater', 'moving_company', 'museum', 'night_club', 'painter', 'park', 'parking', 'pet_store', 'pharmacy', 'physiotherapist', 'plumber', 'police', 'post_office', 'primary_school', 'real_estate_agency', 'restaurant', 'roofing_contractor', 'rv_park', 'school', 'secondary_school', 'shoe_store', 'shopping_mall', 'spa', 'stadium', 'storage', 'store', 'subway_station', 'supermarket', 'synagogue', 'taxi_stand', 'tourist_attraction', 'train_station', 'transit_station', 'travel_agency', 'university', 'veterinary_care', 'zoo'];
+	  type_list.forEach((type) => getNearbyPlaces(pos, service, type));
+	  //console.log(markerdata);
 	  //getNearbyPlaces(pos, service);
+	  //showPanel(markerdata);
     }
 
     // Perform a Places Nearby Search Request
     function getNearbyPlaces(position, service, typ) {
       let request = {
         location: position,
-		radius: '2000',
+		radius: rad,
 		type: typ
       };
 
@@ -140,9 +187,46 @@
     // Handle the results (up to 20) of the Nearby Search
     function nearbyCallback(results, status) {
       if (status == google.maps.places.PlacesServiceStatus.OK) {
-        createMarkers(results);
+        //createMarkers(results);
+		//print detail in pane
+		getMarkerData(results);
       }
     }
+	
+	function getMarkerData(places) {
+	let data;
+	data=[];
+	places.forEach(place => {
+		let request = {
+			placeId: place.place_id,
+			fields: ['name', 'type', 'formatted_phone_number']
+		};
+		service.getDetails(request, (placeResult, status) => {
+            if (status == google.maps.places.PlacesServiceStatus.OK) {
+				let formatted_phone_number;
+				if (placeResult.formatted_phone_number) {
+					formatted_phone_number = placeResult.formatted_phone_number;
+				} else {
+					formatted_phone_number = 'None';
+				}
+				var p1 = new google.maps.LatLng(place.geometry.location);
+				var p2 = new google.maps.LatLng(pos);
+				
+				let dist = Math.round(google.maps.geometry.spherical.computeDistanceBetween(p1, p2));
+				
+				data = [placeResult.name, formatted_phone_number, dist];
+				console.log(p2);
+				//if (markerdata.length == 1 && markerdata[0].length == 1) {
+				//	markerdata[0] = data;
+				//} else {
+				//	markerdata.push(data);
+				//}
+				showPanel(data)
+			}
+        });
+	});
+	//return data;
+	}
 
     // Set markers at the location of each place result
     function createMarkers(places) {
@@ -160,7 +244,7 @@
         google.maps.event.addListener(marker, 'click', () => {
           let request = {
             placeId: place.place_id,
-            fields: ['name', 'formatted_phone_number']
+            fields: ['name', 'type', 'formatted_phone_number']
           };
 
           /* Only fetch the details of a place when the user clicks on a marker.
@@ -187,11 +271,13 @@
         let formatted_phone_number = "None";
         if (placeResult.formatted_phone_number) formatted_phone_number = placeResult.formatted_phone_number;
         placeInfowindow.setContent('<div><strong>' + placeResult.name +
-          '</strong><br>' + 'Phone: ' + formatted_phone_number + '</div>');
+          '</strong><br>' + 'Phone: ' + formatted_phone_number + '</div>' + 'Business Type: ' + placeResult.type + '</div>');
         placeInfowindow.open(marker.map, marker);
         currentInfoWindow.close();
         currentInfoWindow = placeInfowindow;
         //showPanel(placeResult);
+		//markerdata = markerdata + placeResult.name + ',' + formatted_phone_number + '\n';
+		//console.log(markerdata);
       } else {
         console.log('showDetails failed: ' + status);
       }
@@ -199,59 +285,53 @@
 
     /* TODO: Step 4D: Load place details in a sidebar */
     // Displays place details in a sidebar
-    function showPanel(placeResult) {
+    function showPanel(data) {
       // If infoPane is already open, close it
-      if (infoPane.classList.contains("open")) {
-        infoPane.classList.remove("open");
-      }
-
+      //if (infoPane.classList.contains("open")) {
+      //  infoPane.classList.remove("open");
+      //}
       // Clear the previous details
-      while (infoPane.lastChild) {
-        infoPane.removeChild(infoPane.lastChild);
-      }
-
-      /* TODO: Step 4E: Display a Place Photo with the Place Details */
-      // Add the primary photo, if there is one
-      //if (placeResult.photos) {
-      //  let firstPhoto = placeResult.photos[0];
-      //  let photo = document.createElement('img');
-      //  photo.classList.add('hero');
-      //  photo.src = firstPhoto.getUrl();
-      // infoPane.appendChild(photo);
+      //while (infoPane.lastChild) {
+      //  infoPane.removeChild(infoPane.lastChild);
       //}
+	  //let table = document.createElement('table');
+	  //let tableBody = document.createElement('tbody');
+      //table.classList.add('details');
+	  
+	  //data.forEach(function(rowData) {
+		var row = document.createElement('tr');
 
-      // Add place details with text formatting
-      //let name = document.createElement('h1');
-      //name.classList.add('place');
-      //name.textContent = placeResult.name;
-      //infoPane.appendChild(name);
-      //if (placeResult.rating) {
-      //  let rating = document.createElement('p');
-      //  rating.classList.add('details');
-      //  rating.textContent = `Rating: ${placeResult.rating} \u272e`;
-      //  infoPane.appendChild(rating);
-      //}
-      //let address = document.createElement('p');
-      //address.classList.add('details');
-      //address.textContent = placeResult.formatted_address;
-      //infoPane.appendChild(address);
-      //if (placeResult.website) {
-      //  let websitePara = document.createElement('p');
-      //  let websiteLink = document.createElement('a');
-      //  let websiteUrl = document.createTextNode(placeResult.website);
-      //  websiteLink.appendChild(websiteUrl);
-      //  websiteLink.title = placeResult.website;
-      //  websiteLink.href = placeResult.website;
-      //  websitePara.appendChild(websiteLink);
-      //  infoPane.appendChild(websitePara);
-      //}
-
+	//	rowData.forEach(function(cellData) {
+		  var cell0 = document.createElement('td');
+		  cell0.classList.add('namecol');
+		  var cell1 = document.createElement('td');
+		  cell1.classList.add('phonecol');
+		  var cell2 = document.createElement('td');
+		  cell2.classList.add('distcol');
+	//	  cell.appendChild(document.createTextNode(cellData));
+		  //cell.textContent = cellData;
+	//	  row.appendChild(cell);
+		  //console.log(cellData);
+	//	});
+		cell0.textContent = data[0];
+		cell1.textContent = data[1];
+		cell2.textContent = data[2];
+		row.appendChild(cell0);
+		row.appendChild(cell1);
+		row.appendChild(cell2);
+		tableBody.appendChild(row);
+	  //});
+	  //table.appendChild(tableBody);
+	  //infoPane.appendChild(table);
+	  
+      //mdata.textContent = data;
+      //infoPane.appendChild(mdata);
       // Open the infoPane
-      infoPane.classList.add("open");
+      //infoPane.classList.add("open");
     }
   </script>
 
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD-oSqXXf32jBI3cdV-kJStDcfqn5paRtY&libraries=places&callback=initMap">
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD-oSqXXf32jBI3cdV-kJStDcfqn5paRtY&libraries=geometry,places&callback=initMap">
   </script>
 </body>
 
